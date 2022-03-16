@@ -7,33 +7,39 @@ import About from "../pages/About";
 import Blog from "../pages/Blog";
 import Content from "../pages/Content";
 import Home from "../pages/Home";
+import Navbar from "../components/Navbar";
+import '../App.css'
 
 const MainPage = () => {
 
-  const [toggleSideBar, setToggleSidebar] = useState(false)
+  const [toggleSideBar, setToggleSidebar] = useState(false);
+  const [animate, setAnimate] = useState(false)
+
+  const slideIn = 'w-3/5 fixed z-40 animate-slide-in'
+  const slideClose = 'w-3/5 fixed z-40 animate-slide-close'
+
   return (
     <div className="flex flex-col md:flex-row">
-      <aside className="flex flex-col">
-        <div className="hidden md:flex h-screen">
+      <aside className="w-1/5">
+        <div className="hidden md:flex h-screen w-full">
           <Sidebar />
         </div>
-        {!toggleSideBar && (
-          <div className="flex md:hidden hover:cursor-pointer px-3 py-3">
-          <BiMenuAltLeft fontSize={35} className='cursor-pointer' onClick={() => setToggleSidebar(true)}/>
+          <div className="flex md:hidden fixed top-1 left-4 z-10 ">
+          <BiMenuAltLeft fontSize={35} className='cursor-pointer' onClick={() =>{setToggleSidebar(true); setAnimate(true)} }/>
         </div>
-        )}
         {toggleSideBar && (
-          <div className="w-64">
-            <div className="absolute w-64 flex justify-end px-3 py-3">
-              <AiOutlineClose fontSize={25} className='cursor-pointer text-white' onClick={() => setToggleSidebar(false)}/>  
+          <div className={animate ? slideIn : slideClose}>
+            <div className="absolute w-3/5 justify-end px-4 py-4 flex z-50">
+              <AiOutlineClose fontSize={25} className='cursor-pointer text-white hover:text-red-600' onClick={() => { setAnimate(false); setTimeout(() => { setToggleSidebar(false)},500)} }/>  
             </div>
             <div className="h-screen">  
-            <Sidebar/>
+            <Sidebar closeToggle={setToggleSidebar}/>
             </div>
           </div>
         )}
       </aside>
-      <main className="w-full">
+      <main className="w-full md:w-4/5">
+        <Navbar/>
         <Routes>
           <Route path="/*" element={<Home />} />
           <Route path="/home" element={<Home />} />
